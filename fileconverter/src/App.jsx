@@ -12,10 +12,10 @@ function App() {
   const [conversionError, setConversionError] = useState('');
   const fileInputRef = useRef(null); // Create a ref for file input
 
-  
+
  // Read API key from environment variable
   // Read API key from environment variable using Vite.js
-  const convertApiSecret = import.meta.env.CONVERT_API_SECRET;
+  const convertApiSecret = import.meta.env.VITE_CONVERT_API_SECRET;
   let convertApi = ConvertApi.auth(convertApiSecret);
 
   const handleFileChange = (event) => {
