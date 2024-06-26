@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import ConvertApi from 'convertapi-js';
+
+
 
 function App() {
   const [file, setFile] = useState(null);
@@ -8,13 +10,25 @@ function App() {
   const [convertedFile, setConvertedFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const [conversionError, setConversionError] = useState('');
+  const fileInputRef = useRef(null); // Create a ref for file input
 
-  let convertApi = ConvertApi.auth('fwA0WrZmtbvo1vDS');
+ // Read API key from environment variable
+  // Read API key from environment variable using Vite.js
+  const convertApiSecret = import.meta.env.CONVERT_API_SECRET;
+  let convertApi = ConvertApi.auth(convertApiSecret);
 
   const handleFileChange = (event) => {
-    setFile(event.target.files[0]);
+    const selectedFile = event.target.files[0];
+    setFile(selectedFile);
     setConvertedFile(null); // Reset converted file state
     setConversionError('');
+
+    // Reset file input to allow selecting the same file again
+    event.target.value = null; // This line should work fine in most cases
+    // Alternatively, you can use the ref approach to reset input value
+    // if (fileInputRef.current) {
+    //   fileInputRef.current.value = null;
+    // }
   };
 
   const handleConvert = async () => {
@@ -48,23 +62,33 @@ function App() {
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
+
       // Clear inputs after successful conversion and download
       setFile(null);
+      setConvertedFile(null);
       setConvertFrom('DWG');
       setConvertTo('PDF');
-      setConvertedFile(null);
     } else {
       alert('No file has been converted yet.');
     }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-800">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-800">
+      <a
+        href="https://www.linkedin.com/in/abdinasir-mumin"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-gray-50 text-md mb-4 self-center"
+      >
+        Made by: Abdi
+      </a>
+
       <div className="max-w-4xl w-full px-6 py-8 bg-white dark:bg-gray-900 rounded-lg shadow-lg">
         <form className="mb-6">
           <label htmlFor="file_input" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-100">Upload a file to convert</label>
           <div className="relative">
-            <input id="file_input" type="file" className="hidden" onChange={handleFileChange} />
+            <input id="file_input" type="file" className="hidden" onChange={handleFileChange} ref={fileInputRef} /> {/* Bind the ref to the input */}
             <label htmlFor="file_input" className="w-full flex items-center justify-center px-4 py-2 text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 dark:text-gray-100 dark:border-transparent dark:focus:bg-blue-700 dark:placeholder-gray-400 focus:outline-none">
               <svg className="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
               Choose File
@@ -81,7 +105,6 @@ function App() {
               <option value="PDF">PDF</option>
               <option value="PNG">PNG</option>
               <option value="XLS">XLS</option>
-
             </select>
           </div>
 
