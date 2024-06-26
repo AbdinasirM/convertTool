@@ -77,7 +77,7 @@ function App() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-800">
       <a
-        href="https://www.linkedin.com/in/abdinasir-mumin"
+        href="https://www.linkedin.com/in/abdinasir-mumin-566b30177/"
         target="_blank"
         rel="noopener noreferrer"
         className="text-gray-50 text-md mb-4 self-center"
